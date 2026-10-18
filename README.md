@@ -16,6 +16,23 @@ An independent Webdock extension for the [LUMASERV API](https://docs.control-int
 
 ![Optional JSON workbench](screenshots/json-workbench.png)
 
+<details>
+<summary>More screenshots: DNS editing, servers and mobile</summary>
+
+All images below show the real plugin UI in the local authoring preview with synthetic data.
+
+![DNS form with record name, type, target and TTL](screenshots/dns-record-editor.png)
+
+![DNS confirmation showing zone and proposed record values](screenshots/dns-change-review.png)
+
+![Server list with hostname, status, CPU and memory](screenshots/servers-overview.png)
+
+![Server details with power controls and backup actions](screenshots/server-details.png)
+
+![Responsive DNS record list and zone selector on mobile](screenshots/dns-mobile.png)
+
+</details>
+
 DNS changes are not atomic at this provider: editing creates the replacement first, then deletes one exact old match. If the second step fails, the UI reports the remaining old record. Inspect and refresh before retrying. Deletion requires exact name/type/value and optionally TTL, with `limit=1`; identical duplicate records are indistinguishable at the provider endpoint.
 
 ## Coverage
