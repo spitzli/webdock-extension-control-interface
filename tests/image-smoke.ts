@@ -5,9 +5,9 @@ import { randomBytes, generateKeyPairSync } from "node:crypto";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 const image =
-  process.env.PLUGIN_TEST_IMAGE ?? "webdock-control-interface:0.1.0-alpha.1";
-const dir = await mkdtemp(join(tmpdir(), "control-interface-image-")),
-  name = "webdock-control-interface-image-" + randomBytes(6).toString("hex");
+  process.env.PLUGIN_TEST_IMAGE ?? "webdock-lumaserv:0.1.0-alpha.2";
+const dir = await mkdtemp(join(tmpdir(), "lumaserv-image-")),
+  name = "webdock-lumaserv-image-" + randomBytes(6).toString("hex");
 const docker = (...args: string[]) =>
   execFileSync("docker", args, {
     encoding: "utf8",
@@ -57,7 +57,7 @@ try {
     "--name",
     name,
     "--label",
-    "webdock.control-interface-image=" + name,
+    "webdock.lumaserv-image=" + name,
     "--read-only",
     "--cap-drop=ALL",
     "--security-opt=no-new-privileges",
@@ -85,7 +85,7 @@ try {
   let ready = false;
   for (let n = 0; n < 60; n++) {
     try {
-      if ((await fetch(ui + "/ui/control-interface")).status === 200) {
+      if ((await fetch(ui + "/ui/lumaserv")).status === 200) {
         ready = true;
         break;
       }
@@ -93,7 +93,7 @@ try {
     await Bun.sleep(200);
   }
   assert.ok(ready, "Image starts as non-root with read-only filesystem");
-  const html = await fetch(ui + "/ui/control-interface");
+  const html = await fetch(ui + "/ui/lumaserv");
   for (const asset of ["/ui/app.js", "/ui/styles.css"]) assert.equal((await fetch(ui+asset)).status,200);
   assert.equal(html.status, 200);
   assert.match(
@@ -116,8 +116,8 @@ try {
     ],
     { encoding: "utf8" },
   );
-  assert.equal(JSON.parse(health).pluginID, "control-interface");
-  assert.equal(JSON.parse(health).version, "0.1.0-alpha.1");
+  assert.equal(JSON.parse(health).pluginID, "lumaserv");
+  assert.equal(JSON.parse(health).version, "0.1.0-alpha.2");
   assert.notEqual(
     docker("inspect", "--format", "{{.Config.User}}", name),
     "root",
@@ -141,7 +141,7 @@ try {
       docker(
         "inspect",
         "--format",
-        '{{index .Config.Labels "webdock.control-interface-image"}}',
+        '{{index .Config.Labels "webdock.lumaserv-image"}}',
         name,
       ),
       name,

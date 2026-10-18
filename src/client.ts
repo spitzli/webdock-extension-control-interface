@@ -32,7 +32,7 @@ async function readJSON(response: Response): Promise<unknown> {
 }
 
 export function createControlInterface(apiToken: string, fetcher: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response> = fetch) {
-  if (!/^[^\s\x00-\x1f\x7f]{1,4096}$/.test(apiToken)) throw new ControlInterfaceError("Ungültige Control-Interface-Konfiguration.", 503);
+  if (!/^[^\s\x00-\x1f\x7f]{1,4096}$/.test(apiToken)) throw new ControlInterfaceError("Ungültige LUMASERV-Konfiguration.", 503);
   return {
     async execute(id: string, input: unknown): Promise<unknown> {
       const operation = getOperation(id);
@@ -81,16 +81,16 @@ export function createControlInterface(apiToken: string, fetcher: (input: Reques
           ...(operation.method === "GET" ? {} : { body: form.toString() }),
         });
       } catch {
-        throw new ControlInterfaceError(operation.write ? "Keine eindeutige Antwort. Zustand beim Anbieter prüfen, bevor die Aktion erneut ausgeführt wird." : "Control Interface ist nicht erreichbar.", 502);
+        throw new ControlInterfaceError(operation.write ? "Keine eindeutige Antwort. Zustand beim Anbieter prüfen, bevor die Aktion erneut ausgeführt wird." : "LUMASERV ist nicht erreichbar.", 502);
       }
       if (!response.ok) {
         await response.body?.cancel();
-        throw new ControlInterfaceError(response.status === 401 || response.status === 403 ? "Control Interface hat den Zugriff abgelehnt. API-Key und Berechtigungen prüfen." : `Control Interface meldet HTTP ${response.status}. Zustand vor erneutem Ausführen prüfen.`, 502);
+        throw new ControlInterfaceError(response.status === 401 || response.status === 403 ? "LUMASERV hat den Zugriff abgelehnt. API-Key und Berechtigungen prüfen." : `LUMASERV meldet HTTP ${response.status}. Zustand vor erneutem Ausführen prüfen.`, 502);
       }
       let envelope: unknown;
       try { envelope = await readJSON(response); }
-      catch { throw new ControlInterfaceError("Ungültige Antwort von Control Interface. Zustand vor erneutem Ausführen prüfen.", 502); }
-      if (!envelope || typeof envelope !== "object" || !("success" in envelope) || envelope.success !== true || ("errors" in envelope && Array.isArray(envelope.errors) && envelope.errors.length > 0)) throw new ControlInterfaceError("Control Interface hat die Aktion nicht bestätigt. Eingaben und Zustand beim Anbieter prüfen.", 502);
+      catch { throw new ControlInterfaceError("Ungültige Antwort von LUMASERV. Zustand vor erneutem Ausführen prüfen.", 502); }
+      if (!envelope || typeof envelope !== "object" || !("success" in envelope) || envelope.success !== true || ("errors" in envelope && Array.isArray(envelope.errors) && envelope.errors.length > 0)) throw new ControlInterfaceError("LUMASERV hat die Aktion nicht bestätigt. Eingaben und Zustand beim Anbieter prüfen.", 502);
       // Some operations (e.g. reinstall) only return success, without data.
       return "data" in envelope ? envelope.data : null;
     },

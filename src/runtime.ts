@@ -21,14 +21,14 @@ export function createRuntime(config:RuntimeConfig, dependencies:{provider:Contr
  const used=new Map<string,number>();
  return new Elysia({aot:true})
  .onAfterHandle(({set})=>{set.headers['cache-control']='no-store';set.headers['referrer-policy']='no-referrer';})
- .get('/healthz',()=>({ok:true,pluginID:'control-interface',version,generation:config.generation,protocolVersion:1}))
+ .get('/healthz',()=>({ok:true,pluginID:'lumaserv',version,generation:config.generation,protocolVersion:1}))
  .post('/actions/:action',async({request,params,body,status})=>{
   const supplied=Buffer.from(request.headers.get('authorization')??'');const expected=Buffer.from('Bearer '+config.credential);
   if(supplied.length!==expected.length||!timingSafeEqual(supplied,expected))return status(401,{error:'Unauthorized runtime'});
   const token=request.headers.get('x-plugin-invocation')??'';
   let claims;
   try{
-   claims=verifyInvocation(token,{publicKey:config.publicKey,pluginID:'control-interface',generation:config.generation});
+   claims=verifyInvocation(token,{publicKey:config.publicKey,pluginID:'lumaserv',generation:config.generation});
    if(claims.projectID!==config.projectID||claims.action!==params.action)throw Error();
   }catch{return status(403,{error:'Invalid or expired project invocation'});}
   let input:Record<string,unknown>,operation;

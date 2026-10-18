@@ -1,8 +1,8 @@
-# Control Interface for Webdock
+# LUMASERV for Webdock
 
-An independent Webdock extension for the [LUMASERV Control Interface API](https://docs.control-interface.com/). Manage domains, DNS records, servers, domain contacts, certificates, networking and billing from one project console.
+An independent Webdock extension for the [LUMASERV API](https://docs.control-interface.com/). Manage domains, DNS records, servers, domain contacts, certificates, networking and billing from one project console.
 
-**Version 0.1.0-alpha.1 — operator-configured integration.** Provider contracts are checked against the documentation and official PHP client. No live account, paid order or destructive provider operation was used during development. This is not a production compatibility certification.
+**Version 0.1.0-alpha.2 — operator-configured integration.** Provider contracts are checked against the documentation and official PHP client. No live account, paid order or destructive provider operation was used during development. This is not a production compatibility certification.
 
 ## The experience
 
@@ -31,7 +31,7 @@ The linked API has **no documented customer-account CRUD**. Domain contacts and 
 3. Mount a dedicated provider key as a read-only secret file, and set `LUMASERV_API_TOKEN_FILE`. Do not place provider credentials in the manifest, plugin configuration or UI. The declared secret name is `lumaserv-api-token`; mounting the file is an operator setup step, not automatic provisioning claimed by this plugin.
 4. Set the runtime variables listed in `.env.example`: host-issued runtime credential, trusted host public key file, exact project ID/generation, host callback origin, Console origin and TLS files.
 5. Keep **HTTPS 3443 private**, reachable only by Webdock. Expose the static UI on **3444** through your HTTPS ingress; it has no provider/runtime API routes. Restrict runtime egress to the trusted Webdock callback and `partner.lumaserv.com:443`. Use verified TLS and a non-root, read-only container.
-6. Open Control Interface from the project's plugin navigation and test the connection. The balance lookup is read-only.
+6. Open LUMASERV from the project's plugin navigation and test the connection. The balance lookup is read-only.
 
 The default host origins in `.env.example` are examples, not discovery. Use the actual callback and Console origins of your deployment. Rotate the provider token at LUMASERV and replace the mounted secret/restart the runtime. Rotate host authority using a new generation and runtime credential.
 
@@ -97,5 +97,5 @@ remain unverified; the screenshots show only the local authoring harness.
 
 For the browser suite, install Chromium with `bunx playwright install chromium`.
 An existing local binary can be selected using `PLAYWRIGHT_EXECUTABLE_PATH`.
-For container validation, build `webdock-control-interface:0.1.0-alpha.1` locally,
+For container validation, build `webdock-lumaserv:0.1.0-alpha.2` locally,
 then run `bun run test:image`. Both tests create only disposable local fixtures.

@@ -4,7 +4,7 @@ import { createRuntime } from '../src/runtime';
 const keys=generateKeyPairSync('ed25519');
 const config={credential:'x'.repeat(40),hostOrigin:'https://api.webdock.test',publicKey:keys.publicKey.export({type:'spki',format:'pem'}).toString(),generation:2,projectID:'123'};
 function signed(action='domains.list', patch:Record<string,unknown>={}){
- const body=Buffer.from(JSON.stringify({v:1,id:crypto.randomUUID(),pluginID:'control-interface',generation:2,projectID:'123',action,iat:Math.floor(Date.now()/1000),exp:Math.floor(Date.now()/1000)+60,...patch})).toString('base64url');
+ const body=Buffer.from(JSON.stringify({v:1,id:crypto.randomUUID(),pluginID:'lumaserv',generation:2,projectID:'123',action,iat:Math.floor(Date.now()/1000),exp:Math.floor(Date.now()/1000)+60,...patch})).toString('base64url');
  return body+'.'+sign(null,Buffer.from(body),keys.privateKey).toString('base64url');
 }
 function request(action='domains.list',input:unknown={},token=signed(action),extras:Record<string,unknown>={},credential=config.credential){return new Request('https://runtime.test/actions/'+action,{method:'POST',headers:{authorization:'Bearer '+credential,'x-plugin-invocation':token,'content-type':'application/json'},body:JSON.stringify({input,configuration:{},hostOrigin:config.hostOrigin,...extras})});}

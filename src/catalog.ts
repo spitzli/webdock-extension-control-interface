@@ -89,7 +89,7 @@ export class ControlInterfaceError extends Error {
 }
 export function getOperation(id: string): Operation {
   const operation = operations.find(item => item.id === id);
-  if (!operation) throw new ControlInterfaceError("Unbekannte Control-Interface-Aktion.");
+  if (!operation) throw new ControlInterfaceError("Unbekannte LUMASERV-Aktion.");
   return operation;
 }
 const isObject = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value);

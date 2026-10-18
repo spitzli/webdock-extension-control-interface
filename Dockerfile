@@ -8,7 +8,7 @@ COPY ui ./ui
 COPY scripts ./scripts
 RUN bun run build
 FROM oven/bun@sha256:e10577f0db68676a7024391c6e5cb4b879ebd17188ab750cf10024a6d700e5c4
-LABEL org.opencontainers.image.source="https://github.com/spitzli/webdock-extension-control-interface"
+LABEL org.opencontainers.image.source="https://github.com/spitzli/webdock-extension-lumaserv"
 WORKDIR /app
 COPY package.json bun.lock ./
 COPY vendor ./vendor
