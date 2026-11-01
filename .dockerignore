@@ -4,3 +4,13 @@ dist
 .env*
 screenshots
 *.log
+**/node_modules
+.npmrc
+.runtime-test
+.dev-local
+.cache
+/release
+/private
+/secrets
+/data
+**/target

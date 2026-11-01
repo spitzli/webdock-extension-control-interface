@@ -116,3 +116,9 @@ For the browser suite, install Chromium with `bunx playwright install chromium`.
 An existing local binary can be selected using `PLAYWRIGHT_EXECUTABLE_PATH`.
 For container validation, build `webdock-lumaserv:0.1.0-alpha.2` locally,
 then run `bun run test:image`. Both tests create only disposable local fixtures.
+
+## EU CI
+
+Source pushes and trusted same-repository pull requests run the frozen dependency install, build and unit tests through the dedicated rootless EU builder. External fork PRs cannot run on this persistent trusted runner. No hosted fallback, Docker daemon or provider/customer credentials are used.
+
+The manual `Plugin EU build` workflow can push a checked image candidate by enabling `publish_image`. It records the immutable image/source identity; existing versioned registry manifests and releases are unchanged. A new registry version still requires its proper manifest and signed integrity verification.
